@@ -1,0 +1,16 @@
+# IntelliJ / IDE
+.idea/
+*.iml
+
+# Maven / Java
+target/
+*.log
+
+# OS
+.DS_Store
+
+# Env
+.env
+
+# Docker volumes (varsa lokal klasörler)
+postgres_data/
