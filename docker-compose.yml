@@ -76,6 +76,36 @@ services:
       timeout: 5s
       retries: 5
 
+  transfer-service:
+    build:
+      context: ./services/transfer-service
+      dockerfile: Dockerfile
+    image: transfer-service:latest
+    container_name: transfer-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://transfer-postgres:5432/transfer_db
+      SPRING_DATASOURCE_USERNAME: transfer_user
+      SPRING_DATASOURCE_PASSWORD: transfer_pass
+
+      # Flyway same DB
+      SPRING_FLYWAY_URL: jdbc:postgresql://transfer-postgres:5432/transfer_db
+      SPRING_FLYWAY_USER: transfer_user
+      SPRING_FLYWAY_PASSWORD: transfer_pass
+
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+      SERVER_PORT: 8081
+    depends_on:
+      transfer-postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   postgres_data:
 
